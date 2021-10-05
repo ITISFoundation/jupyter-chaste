@@ -1,0 +1,6 @@
+version: "3.7"
+services:
+  jupyter-chaste:
+    image: ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+    ports:
+      - "8888:8888"

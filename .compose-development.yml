@@ -1,0 +1,118 @@
+services:
+  adminer:
+    depends_on:
+      postgres:
+        condition: service_started
+    image: adminer
+    init: true
+    ports:
+    - published: 18080
+      target: 8080
+  jupyter-chaste:
+    deploy:
+      labels:
+        traefik.docker.network: 3d-viewer_default
+        traefik.enable: "true"
+        traefik.http.routers.3d-viewer.entrypoints: http
+        traefik.http.routers.3d-viewer.rule: hostregexp(`{host:.+}`) && PathPrefix(`/x/12345`)
+        traefik.http.services.3d-viewer.loadbalancer.server.port: '8777'
+    environment:
+      POSTGRES_DB: simcoredb
+      POSTGRES_ENDPOINT: postgres:5432
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: simcore
+      POSTGRES_PORT: '5432'
+      POSTGRES_USER: simcore
+      S3_ACCESS_KEY: '12345678'
+      S3_BUCKET_NAME: simcore
+      S3_ENDPOINT: minio:9000
+      S3_SECRET_KEY: '12345678'
+      SIMCORE_HOST_NAME: localhost
+      SIMCORE_NODE_BASEPATH: /x/12345
+      STORAGE_ENDPOINT: storage:8080
+    image: local/jupyter-chaste:development
+    ports:
+    - published: 8888
+      target: 8888
+    volumes:
+    - /home/zhuang/osparc/services/jupyter-chaste/src:/src:rw
+  minio:
+    command: server /data
+    environment:
+      MINIO_ACCESS_KEY: '12345678'
+      MINIO_SECRET_KEY: '12345678'
+    image: minio/minio
+    init: true
+    ports:
+    - published: 9001
+      target: 9000
+  postgres:
+    environment:
+      POSTGRES_DB: simcoredb
+      POSTGRES_PASSWORD: simcore
+      POSTGRES_USER: simcore
+    image: postgres:10
+    init: true
+    ports:
+    - published: 5432
+      target: 5432
+  storage:
+    depends_on:
+      postgres:
+        condition: service_started
+    environment:
+      BF_API_KEY: none
+      BF_API_SECRET: none
+      POSTGRES_DB: simcoredb
+      POSTGRES_ENDPOINT: postgres:5432
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: simcore
+      POSTGRES_PORT: '5432'
+      POSTGRES_USER: simcore
+      S3_ACCESS_KEY: '12345678'
+      S3_BUCKET_NAME: simcore
+      S3_ENDPOINT: minio:9000
+      S3_SECRET_KEY: '12345678'
+      S3_SECURE: '0'
+      STORAGE_LOGLEVEL: INFO
+      STORAGE_MONITORING_ENABLED: '1'
+      TRACING_ENABLED: '1'
+      TRACING_ZIPKIN_ENDPOINT: http://jaeger:9411
+    image: itisfoundation/storage:master-latest
+    init: true
+    ports:
+    - published: 11111
+      target: 8080
+    restart: always
+  traefik:
+    command:
+    - --api=true
+    - --api.dashboard=true
+    - --log.level=DEBUG
+    - --accesslog=true
+    - --entryPoints.http.address=:80
+    - --entryPoints.traefik_dashboard.address=:8080
+    - --providers.docker.endpoint=unix:///var/run/docker.sock
+    - --providers.docker.swarmMode=true
+    - --providers.docker.exposedByDefault=false
+    deploy:
+      labels:
+        traefik.docker.network: paraviewweb_default
+        traefik.enable: "true"
+        traefik.http.middlewares.gzip.compress: "true"
+        traefik.http.routers.api.entrypoints: traefik_dashboard
+        traefik.http.routers.api.middlewares: gzip@docker
+        traefik.http.routers.api.rule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+        traefik.http.routers.api.service: api@internal
+        traefik.http.services.api.loadbalancer.server.port: '8080'
+    image: traefik:v2.2
+    init: true
+    ports:
+    - published: 80
+      target: 80
+    - published: 8080
+      target: 8080
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:rw
+version: '3.7'
+

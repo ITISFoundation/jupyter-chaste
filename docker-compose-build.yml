@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  jupyter-chaste:
+    image: local/${DOCKER_IMAGE_NAME}:${DOCKER_BUILD_TARGET:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      ## target: ${DOCKER_BUILD_TARGET:-production}
