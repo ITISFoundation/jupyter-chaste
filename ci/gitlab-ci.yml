@@ -1,0 +1,127 @@
+image: itisfoundation/ubuntu-bionic-build-docker:stable
+variables:
+  # docker in docker variant, see https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+  # have some prefix so it may help for garbage collecting in the registry
+  SC_CI_PROJECT_PATH_NAME: ci/$CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG
+  SC_CI_TEST_IMAGE_PREFIX: $SC_CI_TESTING_REGISTRY/ci/$CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG
+  SC_CI_CHASTE_LOCATION: .
+services:
+  - docker:dind
+before_script:
+  - docker info
+
+jupyter-chaste-build:
+  stage: build
+  tags:
+    - DOCKER_modern
+  script:
+    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
+    - cd $SC_CI_CHASTE_LOCATION
+    - make devenv
+    - export DOCKER_REGISTRY=$SC_CI_MASTER_REGISTRY
+    - time make pull-latest || true
+    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
+    - time make build
+    - make push-force
+  only:
+    refs:
+      - branches
+      - merge_requests
+    changes:
+      - "**/**/*"
+  environment:
+    name: $CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG/jupyter-chaste
+    on_stop: remove_jupyter-chaste_builds
+
+remove_jupyter-chaste_builds:
+  tags:
+    - DOCKER_modern
+  stage: build
+  only:
+    refs:
+      - branches
+      - merge_requests
+  script:
+    - export DOCKER_REGISTRY=$SC_CI_TESTING_REGISTRY
+    - export DOCKER_PROJECT=$SC_CI_PROJECT_PATH_NAME/simcore/services/dynamic/jupyter-chaste
+    - export API_USER=$SC_CI_TESTING_REGISTRY_USER
+    - export API_TOKEN=$SC_CI_TESTING_REGISTRY_PORTUS_TOKEN
+    - bash $SC_CI_CHASTE_LOCATION/ci/delete-image-from-registry-portus.bash # this will fail if registry is not available through Portus
+  when: manual
+  environment:
+    name: $CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG/jupyter-chaste
+    action: stop
+
+jupyter-chaste-unit-test:
+  stage: test
+  needs: []
+  tags:
+    - DOCKER_modern
+  script:
+    - cd $SC_CI_CHASTE_LOCATION
+    - make devenv
+    - make tests-unit
+  only:
+    refs:
+      - branches
+      - merge_requests
+    changes:
+      - "**/**/*"
+  artifacts:
+    reports:
+      junit:
+        - $SC_CI_CHASTE_LOCATION/pytest_unittest.xml
+    paths:
+      - $SC_CI_CHASTE_LOCATION/pytest_unittest.xml
+
+jupyter-chaste-integration-test:
+  stage: test
+  needs: ["jupyter-chaste-build"]
+  tags:
+    - DOCKER_modern
+  script:
+    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
+    - cd $SC_CI_CHASTE_LOCATION
+    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
+    - make pull-latest
+    - export DOCKER_IMAGE_TAG=latest
+    - make tag-local
+    - make devenv
+    - make tests-integration
+  only:
+    refs:
+      - branches
+      - merge_requests
+    changes:
+      - "**/**/*"
+  artifacts:
+    reports:
+      junit:
+        - $SC_CI_CHASTE_LOCATION/pytest_integrationtest.xml
+    paths:
+      - $SC_CI_CHASTE_LOCATION/pytest_integrationtest.xml
+
+jupyter-chaste-master:
+  stage: deploy
+  needs: ["jupyter-chaste-unit-test", "jupyter-chaste-integration-test"]
+  tags:
+    - DOCKER_modern
+  only:
+    refs:
+      - master
+    changes:
+      - "**/**/*"
+  script:
+    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
+    - echo "$SC_CI_MASTER_REGISTRY_PASSWORD" | docker login -u "$SC_CI_MASTER_REGISTRY_USER" --password-stdin $SC_CI_MASTER_REGISTRY
+    - cd $SC_CI_CHASTE_LOCATION
+    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
+    - make pull-latest
+    - (export DOCKER_IMAGE_TAG=latest; make tag-local)
+    - export DOCKER_REGISTRY=$SC_CI_MASTER_REGISTRY/simcore/services/dynamic
+    - make push
+  environment:
+    name: jupyter-chaste-master
+    url: $SC_CI_MASTER_REGISTRY
