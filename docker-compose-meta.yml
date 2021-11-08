@@ -32,7 +32,7 @@ services:
           "data:*/*"}}}'
         io.simcore.thumbnail: '{"thumbnail": "http://www.cs.ox.ac.uk/chaste/figs/chaste-240x298.jpg"}'
         io.simcore.type: '{"type": "dynamic"}'
-        io.simcore.version: '{"version": "1.0.0"}'
+        io.simcore.version: '{"version": "1.0.1"}'
         org.label-schema.build-date: ${BUILD_DATE}
         org.label-schema.schema-version: '1.0'
         org.label-schema.vcs-ref: ${VCS_REF}
