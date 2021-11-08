@@ -212,7 +212,8 @@ USER $NB_UID
 # Building Chaste
 WORKDIR ${CHASTE_DIR}
 RUN build_chaste.sh && \
-  ln -s ${CHASTE_DIR}/src/projects/ ${NOTEBOOK_BASE_DIR}
+  ln -s ${CHASTE_DIR}/src/projects/ ${NOTEBOOK_BASE_DIR} && \
+  ln -s ${CHASTE_DIR}/testoutput/ ${NOTEBOOK_BASE_DIR}
 
 WORKDIR ${NOTEBOOK_BASE_DIR}
 

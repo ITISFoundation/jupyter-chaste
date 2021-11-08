@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.1] - 2021-11-04
+### Changed
+- Added symbolic link between Chaste output path (~/chaste/testoutput) and working directory (~/work/testoutput))
 ## [1.0.0] - 2021-10-04
 ### Added
 - Jupyter C++ kernel with Chaste (https://github.com/Chaste/chaste-docker) installed for Virtual Stomach team
