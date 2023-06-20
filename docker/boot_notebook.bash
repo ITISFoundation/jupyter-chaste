@@ -64,7 +64,12 @@ cat > "/opt/conda/share/jupyter/lab/overrides.json" <<EOF
 EOF
 
 # shellcheck disable=SC1091
+# The following was commented because it "masked" the C++ kernels
 #source .venv/bin/activate
+
+# Make symbolic links to chaste projects are saved with study data
+ln -s ${CHASTE_DIR}/src/projects/ ${NOTEBOOK_BASE_DIR}/workspace/projects && \
+ln -s ${CHASTE_DIR}/testoutput/ ${NOTEBOOK_BASE_DIR}/workspace/testoutput
 
 #   In the future, we should have a option in the dashboard to configure how jupyter should be
 #   initiated (only for the owner of the coresponding study)
