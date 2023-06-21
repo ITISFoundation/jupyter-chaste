@@ -56,7 +56,7 @@ compose-spec: ## runs ooil to assemble the docker-compose.yml file
 		sh -c "cd /${DOCKER_IMAGE_NAME} && ooil compose"
 
 build: | compose-spec	## build docker image
-	docker-compose build --progress=plain
+	docker-compose build
 
 # To test built service locally -------------------------------------------------------------------------
 .PHONY: run-local

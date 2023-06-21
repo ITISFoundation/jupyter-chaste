@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-echo "INTO build_chaste.sh"
+
 VERSION=${1:-master}
 GIT_REMOTE=${2:-https://github.com/Chaste/Chaste.git}
 #               https://chaste.cs.ox.ac.uk/git/chaste.git

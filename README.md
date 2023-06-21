@@ -49,15 +49,15 @@ Once you have a running version of the Service, you can test `chaste` and the C+
 ### Test chaste
 In a new terminal, run the following to create a new project from a template
 ```shell
-cd projects
+cd work/workspace/projects
 new_project.sh
-ls
-build_project.sh
+cd template_project
+build_project.sh test
 ```
 
 Run one of the existing tutorials:
 ```
-cd ~/chaste/src
+cd ~/chaste/src/
 build_project.sh lung
 ```
 ### Test the JupyterLab C++ kernels

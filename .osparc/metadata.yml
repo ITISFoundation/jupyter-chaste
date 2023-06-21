@@ -1,9 +1,9 @@
 name: Jupyter Chaste
 key: simcore/services/dynamic/jupyter-chaste
-type: computational
+type: dynamic
 integration-version: 1.0.0
 version: 2.0.0
-description: Jupyter Chaste
+description: JupyterLab with C++ Kernels and Chaste (https://github.com/Chaste/chaste-docker) pre-installed. Chaste version is 2021.1.a18592d.
 contact: iavarone@itis.swiss
 thumbnail: http://www.cs.ox.ac.uk/chaste/figs/chaste-240x298.jpg
 authors:
