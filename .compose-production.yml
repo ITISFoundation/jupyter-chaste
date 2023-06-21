@@ -1,0 +1,8 @@
+services:
+  jupyter-chaste:
+    image: local/jupyter-chaste:production
+    ports:
+    - published: 8888
+      target: 8888
+version: '3.7'
+
