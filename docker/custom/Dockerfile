@@ -145,11 +145,6 @@ RUN python3 -m venv .venv &&\
   echo y | .venv/bin/python -m jupyter kernelspec uninstall python3 &&\
   .venv/bin/python -m jupyter kernelspec list
 
-# RUN mamba install -y -c conda-forge \
-#    xeus-cling=0.15.1 \
-#    xtensor=0.23.10 \
-#    texinfo
-
 RUN conda install --quiet --yes \
   'texinfo' \
   'xeus-cling=0.13.0' \
@@ -173,10 +168,7 @@ RUN jupyter serverextension enable voila && \
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg .venv/bin/python -c "import matplotlib.pyplot" 
 
- RUN fix-permissions /home/$NB_USER/.local/share/jupyter && \
-     fix-permissions /home/$NB_USER/.ipython
-#RUN fix-permissions /home/$NB_USER
-#   # run fix permissions only once. This can be probably optimized, so it is faster to build
+RUN fix-permissions /home/$NB_USER
 
 # copy README and CHANGELOG
 COPY --chown=$NB_UID:$NB_GID CHANGELOG.md ${NOTEBOOK_BASE_DIR}/CHANGELOG.md
