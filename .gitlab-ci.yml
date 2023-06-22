@@ -1,4 +1,0 @@
-include:
-  # services
-  - local: '/ci/gitlab-ci.yml'
-

@@ -1,9 +1,3 @@
-*egg*
-pytest_*.xml
-.env
-.compose-*.yml
-
-
 # Prerequisites
 *.d
 
@@ -24,7 +18,6 @@ pytest_*.xml
 
 # Build folders
 build/
-!services/itis/neuron-isolve/build
 deploy/
 
 # test folders
@@ -34,13 +27,12 @@ test/
 .env
 
 # Python
-*/__pycache__/
+__pycache__/
 .venv/
 .pytest_cache/
 
 # java
 *.class
-
 
 # vscode
 .vscode/
@@ -50,14 +42,15 @@ test/
 # temp folders
 tmp/
 .tmp
-
 # gitlab
 *.toml
 
 .cache/
 
+# not interested in storing this file
+docker-compose.yml
 
-pytest*
+# ignore all files in validation
+validation/
 
-benchmark
-
+*.ignore.*
