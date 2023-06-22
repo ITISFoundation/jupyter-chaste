@@ -1,6 +1,7 @@
 # Jupyter Chaste
-Source code for the jupyter-chaste Service on o²S²PARC.
 ![](http://www.cs.ox.ac.uk/chaste/figs/chaste-240x298.jpg)
+Source code for the jupyter-chaste Service on o²S²PARC.
+
 
 ## Kernels
 
