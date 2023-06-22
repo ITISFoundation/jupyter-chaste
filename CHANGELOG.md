@@ -1,11 +1,9 @@
 # Changelog
 
-<<<<<<< HEAD
 ## [2.0.0] - 2023-06-21
 - updated to run via dynamic-sidecar
 - Base image now uses the same as jupyterlab-math
 
-=======
 ## [1.0.1] - 2021-11-04
 ### Changed
 - Added symbolic link between Chaste output path (~/chaste/testoutput) and working directory (~/work/testoutput))
@@ -42,4 +40,3 @@ All notable changes to this service will be documented in this file. The format 
 
 SEE https://keepachangelog.com/en/1.0.0/
 -->
->>>>>>> 369a70b1b8723f5911e2c589528a0d8182652bdc
