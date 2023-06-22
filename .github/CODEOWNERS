@@ -4,12 +4,9 @@
 # SEE https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/about-code-owners#example-of-a-codeowners-file
 
 
-# files and folders recursively
-Dockerfile          @elisabettai
-Makefile            @GitHK
-
 # NOTE: '/' denotes the root of the repository
 /.github/            @GitHK
 /.osparc/            @elisabettai
 /kernels/            @elisabettai
 /docker/             @elisabettai @GitHK
+Makefile             @GitHK

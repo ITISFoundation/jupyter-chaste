@@ -1,32 +1,3 @@
-<<<<<<< HEAD
-## Common.gitignore
-
-# output folders
-build/
-output/
-out/
-
-# temporary folders
-tmp/
-
-# explicit mark
-*ignore*
-.tmp*
-
-# vscode configuration
-.vscode
-
-# make outputs
-pytest_*.xml
-.compose*
-
-# validation folder
-!validation/**/*
-# docker ignore
-!.dockerignore
-# git ignore
-!.gitignore
-=======
 *egg*
 pytest_*.xml
 .env
@@ -90,4 +61,3 @@ pytest*
 
 benchmark
 
->>>>>>> 369a70b1b8723f5911e2c589528a0d8182652bdc
