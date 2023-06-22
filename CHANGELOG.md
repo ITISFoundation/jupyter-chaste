@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.0] - 2023-06-21
+- updated to run via dynamic-sidecar
+- Base image now uses the same as jupyterlab-math
+
 ## [1.0.1] - 2021-11-04
 ### Changed
 - Added symbolic link between Chaste output path (~/chaste/testoutput) and working directory (~/work/testoutput))
