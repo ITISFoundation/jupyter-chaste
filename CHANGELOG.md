@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.1] - 2024-09-07
+- install packages from pinned versions
+- docker complies once more
+- previous version was not starting
+- installed chaste from github master branch
+
 ## [2.0.0] - 2023-06-21
 - updated to run via dynamic-sidecar
 - Base image now uses the same as jupyterlab-math

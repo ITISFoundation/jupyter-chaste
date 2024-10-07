@@ -7,7 +7,7 @@ SHELL = /bin/sh
 .DEFAULT_GOAL := help
 
 export DOCKER_IMAGE_NAME ?= jupyter-chaste
-export DOCKER_IMAGE_TAG ?= 2.0.0
+export DOCKER_IMAGE_TAG ?= 2.0.1
 
 
 # PYTHON ENVIRON ---------------------------------------------------------------------------------------
