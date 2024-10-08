@@ -63,5 +63,3 @@ build_project.sh lung
 ```
 ### Test the JupyterLab C++ kernels
 Open a new notebook with any of the existing C++ kernels and run one of the existing notebooks in the `xeus-cling` repository, for example [xcpp.ipynb](https://github.com/jupyter-xeus/xeus-cling/blob/main/notebooks/xcpp.ipynb).
-
-

@@ -22,7 +22,7 @@ fi
 if [ $VERSION != '.' ]; then
     if [ $VERSION = 'master' ] || [ $VERSION = 'develop' ]; then
         # Override GIT_REMOTE to build from the upstream server
-        GIT_REMOTE=https://chaste.cs.ox.ac.uk/git/chaste.git
+        GIT_REMOTE=https://github.com/Chaste/Chaste.git
     fi
     echo "Cloning Chaste from remote: ${GIT_REMOTE}#${VERSION} into ${CHASTE_SOURCE_DIR}..."
     mkdir -p $CHASTE_SOURCE_DIR

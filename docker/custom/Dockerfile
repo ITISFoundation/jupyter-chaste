@@ -43,7 +43,7 @@ RUN apt-get update && \
 
 # Install the Chaste repo list and key
 # https://chaste.cs.ox.ac.uk/trac/wiki/InstallGuides/UbuntuPackage
-RUN echo "deb http://www.cs.ox.ac.uk/chaste/ubuntu focal/" >> /etc/apt/sources.list.d/chaste.list && \
+RUN echo "deb https://chaste.github.io/ubuntu focal/" >> /etc/apt/sources.list.d/chaste.list && \
   apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 422C4D99
 
 RUN pip --no-cache --quiet install --upgrade \
@@ -83,10 +83,6 @@ RUN apt-get update && \
 
 # Fix CMake warnings: https://github.com/autowarefoundation/autoware/issues/795
 RUN update-alternatives --install /usr/bin/vtk vtk /usr/bin/vtk7 7
-
-# Install TextTest for regression testing (this requires pygtk)
-RUN pip install texttest
-ENV TEXTTEST_HOME /usr/local/bin/texttest
 
 
 # Allow CHASTE_DIR to be set at build time if desired
@@ -136,6 +132,7 @@ WORKDIR ${HOME}
 
 RUN python3 -m venv .venv &&\
   .venv/bin/pip --no-cache --quiet install --upgrade pip~=21.3 wheel setuptools &&\
+  .venv/bin/pip --no-cache --quiet install  texttest==4.3.0 &&\
   .venv/bin/pip --no-cache --quiet install ipykernel &&\
   .venv/bin/python -m ipykernel install \
   --user \
@@ -146,7 +143,7 @@ RUN python3 -m venv .venv &&\
   .venv/bin/python -m jupyter kernelspec list
 
 RUN conda install --quiet --yes \
-  'texinfo' \
+  'texinfo=7.0' \
   'xeus-cling=0.13.0' \
   'xtensor=0.23.10' \
   'xtensor-blas=0.19.2' \

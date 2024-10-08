@@ -6,24 +6,11 @@ IFS=$'\n\t'
 INFO="INFO: [$(basename "$0")] "
 WARNING="WARNING: [$(basename "$0")] "
 
-# create output folder
-echo
-echo "$INFO" "creating inputs/outputs folder"
-mkdir --parents "${INPUTS_FOLDER}"
-mkdir --parents "${OUTPUTS_FOLDER}"
 
-# Restore previous state pulling it from S3
-if [ -n "${SIMCORE_NODE_BASEPATH}" ]; then
-  echo "$INFO" "Restoring previous state..."
-  python /docker/state_puller.py "${SIMCORE_NODE_APP_STATE_PATH}"
-else
-  echo "$WARNING" "SIMCORE_NODE_APP_STATE_PATH was not set. Saving states feature is disabled."
-fi
 
 # Trust all notebooks in the notebooks folder
 echo "$INFO" "trust all notebooks in path..."
-find "${SIMCORE_NODE_APP_STATE_PATH}" -name '*.ipynb' -type f -exec jupyter trust {} +
-
+find "${NOTEBOOK_BASE_DIR}" -name '*.ipynb' -type f -exec jupyter trust {} +
 
 
 # Configure
@@ -42,9 +29,9 @@ cat > .jupyter_config.json <<EOF
     "NotebookApp": {
         "ip": "0.0.0.0",
         "port": 8888,
-        "base_url": "${SIMCORE_NODE_BASEPATH}",
-        "extra_static_paths": ["${SIMCORE_NODE_BASEPATH}/static"],
-        "notebook_dir": "${SIMCORE_NODE_APP_STATE_PATH}",
+        "base_url": "",
+        "extra_static_paths": ["/static"],
+        "notebook_dir": "${NOTEBOOK_BASE_DIR}",
         "token": "",
         "quit_button": false,
         "open_browser": false,
