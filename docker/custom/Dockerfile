@@ -158,8 +158,8 @@ COPY --chown=$NB_UID:$NB_GID kernels/python-maths/requirements.txt ${NOTEBOOK_BA
 RUN .venv/bin/pip --no-cache install pip-tools && \
   .venv/bin/pip --no-cache install -r ${NOTEBOOK_BASE_DIR}/requirements.txt
 
-RUN jupyter serverextension enable voila && \
-  jupyter server extension enable voila
+RUN .venv/bin/jupyter serverextension enable voila && \
+  .venv/bin/jupyter server extension enable voila
 
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
