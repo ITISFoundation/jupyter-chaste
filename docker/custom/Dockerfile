@@ -143,15 +143,16 @@ RUN python3 -m venv .venv &&\
   echo y | .venv/bin/python -m jupyter kernelspec uninstall python3 &&\
   .venv/bin/python -m jupyter kernelspec list
 
-RUN conda install --quiet --yes \
+# mamba (ships in the base image) solves these pins in under a minute; conda 4.12's
+# classic solver needs 15+ min. The pkgs cache mount keeps downloads across rebuilds.
+RUN --mount=type=cache,target=/opt/conda/pkgs \
+  mamba install --quiet --yes \
   'texinfo=7.0' \
   'xeus-cling=0.13.0' \
   'xtensor=0.23.10' \
   'xtensor-blas=0.19.2' \
   'notebook=6.4.4' \
   && \
-  conda update -y --force conda && \
-  conda clean -tipsy && \
   jupyter lab build -y
 
 # copy and resolve dependecies to be up to date
