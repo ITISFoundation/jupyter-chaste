@@ -43,6 +43,11 @@ else
           -H$CHASTE_SOURCE_DIR \
           -B$CHASTE_BUILD_DIR
 fi
+# setuptools>=82 drops pkg_resources, which jinja2<3.1 in the codegen venv imports
+if [ -x "$CHASTE_BUILD_DIR/codegen_python3_venv/bin/pip" ]; then
+    "$CHASTE_BUILD_DIR/codegen_python3_venv/bin/pip" install --quiet --upgrade 'setuptools<81'
+fi
+
 make --no-print-directory -j$NCORES -C $CHASTE_BUILD_DIR # -f $CHASTE_BUILD_DIR/Makefile
 echo "Done!"
 echo "New projects may be initialised with the provided script new_project.sh"

@@ -20,8 +20,9 @@ ENV NOTEBOOK_BASE_DIR="$HOME/work"
 
 USER root
 
-RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
+# Retries bound the damage from throttled/failing Ubuntu mirror connections
+RUN apt-get -o Acquire::Retries=5 -o Acquire::http::Timeout=30 update && \
+  apt-get -o Acquire::Retries=5 -o Acquire::http::Timeout=30 install -y --no-install-recommends \
   gfortran \
   ffmpeg \
   make \
@@ -52,8 +53,8 @@ RUN pip --no-cache --quiet install --upgrade \
   wheel
 
 # Install dependencies with recommended, applicable suggested and other useful packages
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get -o Acquire::Retries=5 -o Acquire::http::Timeout=30 update && \
+    apt-get -o Acquire::Retries=5 -o Acquire::http::Timeout=30 install -y --no-install-recommends \
     chaste-dependencies \
     cmake \
     scons \
